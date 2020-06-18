@@ -7,7 +7,8 @@ module.exports = {
   },
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: 'build.js'
+    filename: 'build.js',
+    publicPath: '/'
   },
   module: {
     rules: [
