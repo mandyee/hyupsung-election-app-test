@@ -1,13 +1,14 @@
-const path = require('path')
+require('dotenv').config();
+const webpack = require('webpack');
+const path = require('path');
+
 module.exports = {
-  mode: 'development',
-  entry: path.join(__dirname, 'src/js', 'App.js'),
-  devServer: {
-    contentBase: path.join(__dirname, 'src'),
-  },
+  entry: './client/app.js',
+  mode: process.env.MODE,
   output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'build.js'
+    filename: 'bundle.js',
+    publicPath: '/',
+    path: path.resolve(__dirname, 'client/dist')
   },
   module: {
     rules: [
@@ -28,5 +29,21 @@ module.exports = {
         include: '/build/contracts/'
       }
     ]
-  }
-}
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        'LOCAL_NODE': JSON.stringify(process.env.LOCAL_NODE),
+        'MODE':JSON.stringify(process.env.MODE),
+      }
+    })
+  ],
+  node: {
+    net: 'empty',
+    tls: 'empty',
+    dns: 'empty'
+  },
+  externals:[{
+    xmlhttprequest: '{XMLHttpRequest:XMLHttpRequest}'
+  }]
+};

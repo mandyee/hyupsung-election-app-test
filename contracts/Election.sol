@@ -23,6 +23,9 @@ contract Election {
     uint electionId;
     string electionName;  // 선거 이름 (ex. 총학생회 선거)
     uint isStarted; // 0 : 시작 전, 1 : 진행 중, 2 : 종료
+
+    uint collegeId; // 선거 가능한 단과대
+    uint deptId;  // 선거 가능한 학과
   }
 
   struct Voter {
@@ -62,12 +65,14 @@ contract Election {
     return candidateList.length;
   }
 
-  function addElection(string memory _electionName) public {
+  function addElection(string memory _electionName, uint _collegeId, uint _deptId) public {
     electionList.length += 1;
     uint index = electionList.length - 1;
     electionList[index].electionId = index;
     electionList[index].electionName = _electionName;
     electionList[index].isStarted = 0;
+    electionList[index].collegeId = _collegeId;
+    electionList[index].deptId = _deptId;
   }
 
   function getElectionCount() public view returns(uint) {
@@ -87,6 +92,18 @@ contract Election {
   // checkVoted == false일 때만 실행
   function vote(uint _studentId, uint _candidateId) public {
     uint electionId = candidateList[_candidateId].electionId;
+
+    uint cnt = 0;
+
+    // 현재 로그인 한 유권자가 voterList에 등록이 되어있는지 확인하기 위함
+    for(uint i=0; i<voterList.length; i++) {
+      if(voterList[i].studentId == _studentId) break;
+      else cnt += 1;
+    }
+
+    if(cnt == voterList.length) { // 로그인 한 유권자가 voterList에 없으면
+      addVoter(_studentId); // 등록
+    }
 
     for(uint i=0; i<voterList.length; i++) {
       if(voterList[i].studentId == _studentId) {
@@ -139,18 +156,14 @@ contract Election {
   );
 
   constructor () public {
-    // 유권자
-    addVoter(20170001);
-    addVoter(20170002);
-
     // 선거
-    addElection("2019학년도 총학생회 선거");
-    addElection("2019학년도 이공대학 학생회 선거");
-    addElection("2019학년도 컴퓨터공학과 학생회 선거");
-    addElection("2020학년도 총학생회 선거");
-    addElection("2020학년도 이공대학 학생회 선거");
-    addElection("2020학년도 컴퓨터공학과 학생회 선거");
-    addElection("2020학년도 예술대학 학생회 선거");
+    addElection("2019학년도 총학생회 선거", 0, 0);
+    addElection("2019학년도 이공대학 학생회 선거", 4, 0);
+    addElection("2019학년도 컴퓨터공학과 학생회 선거", 4, 14);
+    addElection("2020학년도 총학생회 선거", 0, 0);
+    addElection("2020학년도 이공대학 학생회 선거", 4, 0);
+    addElection("2020학년도 컴퓨터공학과 학생회 선거", 4, 14);
+    addElection("2020학년도 예술대학 학생회 선거", 5, 0);
 
     // 선거 시작
     startElection(3); startElection(4);
@@ -162,19 +175,19 @@ contract Election {
     addCandidate(0, "홍길동", "컴퓨터공학과", "한다연", "경영학과", "1. 공약1입니다.\n2. 공약2입니다.");
     addCandidate(0, "김철수", "경영학과", "백경문", "아동보육학과", "1. 적극적 소통\n2. 강의실 환경 개선");
     addCandidate(0, "김영희", "사회복지학과", "김주영", "컴퓨터공학과", "최고의 학교를 만들겠습니다");
-    candidateList[0].voteCount = 410;
-    candidateList[1].voteCount = 746;
-    candidateList[2].voteCount = 589;
+    candidateList[0].voteCount = 182;
+    candidateList[1].voteCount = 75;
+    candidateList[2].voteCount = 93;
 
     // 2019 이공대학 학생회 선거 후보자들
     addCandidate(1, "강준상", "생명과학과", "한서진", "컴퓨터공학과", "1. 기호1번 공약1입니다.\n2. 기호1번 공약2입니다.");
     addCandidate(1, "이수임", "보건관리학과", "황치영", "도시공학과", "1. 기호2번 공약1입니다.\n2. 기호2번 공약2입니다.");
-    candidateList[3].voteCount = 229;
-    candidateList[4].voteCount = 214;
+    candidateList[3].voteCount = 83;
+    candidateList[4].voteCount = 25;
 
     // 2019 컴퓨터공학과 학생회 선거 후보자들
     addCandidate(2, "노승혜", "컴퓨터공학과", "차민혁", "컴퓨터공학과", "1. 컴퓨터공학과 공약1입니다.\n2. 컴퓨터공학과 공약2입니다.");
-    candidateList[5].voteCount = 87;
+    candidateList[5].voteCount = 28;
 
     // 2020 총학생회 선거 후보자들
     addCandidate(3, "홍길동", "컴퓨터공학과", "한다연", "경영학과", "1. 공약1입니다.\n2. 공약2입니다.");
