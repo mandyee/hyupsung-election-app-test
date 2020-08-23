@@ -85,7 +85,7 @@ class ShowResult extends React.Component {
                     <td>{candidate.presidentName}</td>
                     <td>{candidate.vpresidentName}</td>
                     <td>{candidate.voteCount}</td>
-                    <td> <img src = "../../img/chart.png"
+                    <td> <img src = "../../img/chart.PNG"
                       width={width} height="25"/> &nbsp; <strong> {rate} % </strong>
                     </td>
                   </tr>
