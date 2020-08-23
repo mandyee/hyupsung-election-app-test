@@ -69,6 +69,7 @@ class App extends React.Component {
     var date, formattedTime;
     var year, month, day, hours, minutes, seconds;
 
+    // Ropsten의 etherscan API를 사용해서 이 컨트랙트의 트랜잭션 정보를 가져옴
     $.getJSON(etherscanURL, function (data) {
       var contractABI = "";
       contractABI = data.result;
