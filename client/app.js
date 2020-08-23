@@ -56,19 +56,25 @@ class App extends React.Component {
     })
   }
 
-  getBlocks(curr_block_no) {
+  getBlocks() {
+    const contract_address = "0xf504ddf050acf1e14483d1b9cadd8febd46de80c"
+    const etherscanURL = 'https://api-ropsten.etherscan.io/api?module=account&action=txlist&address='
+      + contract_address + '&startblock=0&endblock=99999999&sort=desc&apikey=YourApiKeyToken';
+
     const block_ids = this.state.block_ids.slice();
     const block_hashes = this.state.block_hashes.slice();
     const block_ts = this.state.block_ts.slice();
-    var max_blocks = curr_block_no;
 
     // unix timestamp 형식을 yyyy-mm-dd 형식으로 바꾸기 위한 변수들
     var date, formattedTime;
     var year, month, day, hours, minutes, seconds;
 
-    for (var i = max_blocks; i >= 0; i--) {
-      this.web3.eth.getBlock(i, false, function(err, block) {
-        date = new Date(block.timestamp * 1000)
+    $.getJSON(etherscanURL, function (data) {
+      var contractABI = "";
+      contractABI = data.result;
+
+      _.each(contractABI, (value, index) => {
+        date = new Date(contractABI[index].timeStamp * 1000)
 
         year = date.getFullYear()
         month = date.getMonth() + 1
@@ -87,11 +93,12 @@ class App extends React.Component {
         formattedTime = year + '.' + month + '.' + day
           + ' ' + hours + ':' + minutes + ':' + seconds
 
-        block_ids.push(block.number)
-        block_hashes.push(block.hash)
+        block_ids.push(contractABI[index].blockNumber)
+        block_hashes.push(contractABI[index].hash)
         block_ts.push(formattedTime)
       })
-    }
+    });
+
     this.setState({
       block_ids: block_ids,
       block_hashes: block_hashes,
@@ -199,7 +206,7 @@ class App extends React.Component {
   }
 
   watchEvents() {
-    this.getBlocks(this.state.curr_block);
+    this.getBlocks();
 
     // TODO: trigger event when vote is counted, not when component renders
     this.electionInstance.votedEvent({}, {
