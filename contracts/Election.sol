@@ -156,6 +156,8 @@ contract Election {
   );
 
   constructor () public {
+    /*
+
     // 선거
     addElection("2019학년도 총학생회 선거", 0, 0);
     addElection("2019학년도 이공대학 학생회 선거", 4, 0);
@@ -200,5 +202,7 @@ contract Election {
 
     // 2020 컴퓨터공학과 학생회 선거 후보자들
     addCandidate(5, "노승혜", "컴퓨터공학과", "차민혁", "컴퓨터공학과", "1. 컴퓨터공학과 공약1입니다.\n2. 컴퓨터공학과 공약2입니다.");
+
+    */
   }
 }
