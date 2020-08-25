@@ -73,6 +73,10 @@ class Voter extends React.Component {
     window.localStorage.removeItem('deptId')
     window.localStorage.removeItem('collegeName')
     window.localStorage.removeItem('deptName')
+
+    window.localStorage.removeItem('isVoting')
+    window.localStorage.removeItem('votingElection')
+
     this.setState({
       studentId: '',
       authcode: '',

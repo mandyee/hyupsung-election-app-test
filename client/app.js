@@ -201,13 +201,32 @@ class App extends React.Component {
           }
         })
 
-        this.setState({ loading: false })
+        // 트랜잭션 승인 진행중에 페이지 새로고침을 할 경우, 투표 페이지가 나오는 것을 방지 (중복투표 방지)
+        if (window.localStorage.getItem('isVoting')) {
+          this.setState({ loading: true })
+          alert("투표 처리중입니다.")
+        }
+        else {
+          this.setState({ loading: false })
+        }
       })
     })
   }
 
   watchEvents() {
     this.getBlocks();
+
+    // 트랜잭션 승인 완료 후에는 투표 페이지가 나오도록 함
+    if (window.localStorage.getItem('studentId') != null &&
+    window.localStorage.getItem('votingElection') != null) {
+      this.electionInstance.checkVoted(window.localStorage.getItem('studentId'),
+      window.localStorage.getItem('votingElection')).then((voted) => {
+        if(voted) {
+          window.localStorage.removeItem('isVoting')
+          window.localStorage.removeItem('votingElection')
+        }
+      })
+    }
 
     // TODO: trigger event when vote is counted, not when component renders
     this.electionInstance.votedEvent({}, {
@@ -226,11 +245,17 @@ class App extends React.Component {
   }
 
   castVote = (studentId, candidateId) => {
+    // 트랜잭션 승인 중에 페이지 새로고침을 할 경우, 투표 폼이 나오는 것을 방지하는 변수 (중복투표 방지)
+    window.localStorage.setItem('votingElection', this.state.selectedElection)
+    window.localStorage.setItem('isVoting', true)
+
     this.setState({ changing: true })
     this.electionInstance.vote(studentId, candidateId, { from: this.state.account, gas: 2000000 })
-    .then((result) =>
+    .then((result) => {
       this.setState({ hasVoted: true })
-    )
+      window.localStorage.removeItem('isVoting')
+      window.localStorage.removeItem('votingElection')
+    })
   }
 
   selectElection = e => {
