@@ -12366,12 +12366,12 @@
         }
       },
       "links": {},
-      "address": "0x17B972860CCbD522CA145C356977C78F6E222F2e",
-      "transactionHash": "0x5df2d9ddcd1b4923c16fb203b464ab16df577a4e6f50506bf51423bd22cf7693"
+      "address": "0x4dFb644856A93ebC3ed96BCf2A411Ce9d30cBFA9",
+      "transactionHash": "0x6b5720639e17a2276238df57ae2e0d3af4f569aa766ffd6fd680ec8479458f63"
     }
   },
   "schemaVersion": "3.1.0",
-  "updatedAt": "2020-08-25T11:27:30.215Z",
+  "updatedAt": "2020-09-04T09:31:23.788Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}
